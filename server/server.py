@@ -14,14 +14,14 @@ app.add_middleware(
 )
 
 # Conexão com o Redis
-redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
 # COLOQUE A SUA CHAVE DO OPENWEATHERMAP AQUI
 CHAVE_CLIMA = "bf5b84a1ad77e03471167e21c1201c42"
 
 def enviar_para_fila(mensagem):
     # Conecta no RabbitMQ e manda a mensagem para a fila 'fila_pdf'
-    conexao = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    conexao = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
     canal = conexao.channel()
     canal.queue_declare(queue='fila_pdf')
     canal.basic_publish(exchange='', routing_key='fila_pdf', body=json.dumps(mensagem))

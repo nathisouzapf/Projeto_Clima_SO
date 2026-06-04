@@ -6,7 +6,7 @@ import time
 from fpdf import FPDF
 
 # Conexão com o Redis (para avisar quando terminar)
-redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
 def callback(ch, method, properties, body):
     dados = json.loads(body)
@@ -41,7 +41,7 @@ def callback(ch, method, properties, body):
     print(f"[+] PDF finalizado e salvo como {nome_arquivo}")
 
 # Conecta no RabbitMQ e fica esperando mensagens na fila 'fila_pdf'
-conexao = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+conexao = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 canal = conexao.channel()
 canal.queue_declare(queue='fila_pdf')
 
