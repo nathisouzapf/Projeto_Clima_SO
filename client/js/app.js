@@ -28,7 +28,7 @@ async function gerarGuia() {
         // Alimenta a tela com os dados básicos retornados
         document.getElementById('nomeCidade').innerText = dados.cidade;
         document.getElementById('temp').innerText = Math.round(dados.temperatura);
-        document.getElementById('fonte').innerText = dados.fonte;
+        document.getElementById('fonte').innerText = dados.fonte === 'Redis (Cache)' ? '⚡ CacheRedis' : '🌐 OpenWeatherMap';
 
         // 2. Inicia o Polling (perguntar ao Redis de tempos em tempos se o Worker terminou)
         clearInterval(intervaloStatus);

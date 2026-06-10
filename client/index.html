@@ -3,29 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de Viagem Automático</title>
+    <title>Guia de Viagem Inteligente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="card">
-        <h2>Gerador de Guia 🌍</h2>
-        <div class="input-group">
-            <input type="text" id="cidade" placeholder="Ex: Paris, Gramado, Toquio...">
-        </div>
-        <button id="btnGerar">Gerar Guia em PDF</button>
+    <div class="hero">
+        <div class="hero-overlay"></div>
 
-        <div id="resultado" style="display:none;">
-            <h3 id="nomeCidade"></h3>
-            <div class="weather-badge"><span id="temp"></span>°C</div>
-            <p class="info">Dados: <b id="fonte"></b></p>
-            
-            <div id="statusContainer">
-                <div id="statusPdf" class="status-processando">
-                    <span class="spinner"></span>
-                    <span id="statusTexto">Consultando clima e acionando fila...</span>
+        <div class="hero-content">
+            <div class="brand">
+                <span class="brand-icon">✦</span>
+                <span class="brand-name">Guia de Viagem</span>
+            </div>
+
+            <div class="headline">
+                <h1>Descubra o clima<br>da sua próxima<br><em>aventura.</em></h1>
+                <p class="subtitle">Gere um guia personalizado com dicas de viagem baseadas no clima real da cidade.</p>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="cidade" placeholder="Paris, Gramado, Tóquio..." autocomplete="off" />
+                <button id="btnGerar">
+                    <span id="btnTexto">Gerar Guia em PDF</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+
+            <div id="resultado" class="resultado" style="display:none;">
+                <div class="resultado-clima">
+                    <div class="clima-info">
+                        <span class="clima-cidade" id="nomeCidade"></span>
+                        <span class="clima-fonte" id="fonte"></span>
+                    </div>
+                    <div class="clima-temp">
+                        <span id="temp"></span>
+                        <span class="clima-grau">°C</span>
+                    </div>
+                </div>
+
+                <div id="statusContainer">
+                    <div id="statusPdf" class="status-processando">
+                        <span class="spinner"></span>
+                        <span id="statusTexto">Consultando clima e acionando fila...</span>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="hero-footer">
+            <span>De praias exóticas</span>
+            <span class="dot">·</span>
+            <span>a monumentos históricos</span>
+            <span class="dot">·</span>
+            <span>o mundo te espera</span>
         </div>
     </div>
 
