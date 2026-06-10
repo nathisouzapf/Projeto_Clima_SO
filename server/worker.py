@@ -23,21 +23,21 @@ def callback(ch, method, properties, body): #Disparada pelo RabbitMQ toda vez qu
     # Dicas por faixa de temperatura
     if temp >= 28:
         faixa = "Clima Quente"
-        roupa     = "Roupas leves, claras e de tecido respiravel."
+        roupa     = "Roupas leves, claras e de tecido respirável."
         atividade = "Praia, piscina, parques ao ar livre e passeios noturnos."
-        evitar    = "Exercicios intensos ao sol entre 10h e 16h."
+        evitar    = "Exercícios intensos ao sol entre 10h e 16h."
         cor_faixa = (239, 68, 68)   # vermelho
     elif temp >= 18:
         faixa = "Clima Ameno"
-        roupa     = "Camiseta com uma camada leve por cima, jeans ou calca."
+        roupa     = "Camiseta com uma camada leve por cima, jeans ou calça."
         atividade = "Caminhadas, turismo urbano, ciclovias e mercados locais."
         evitar    = "Sair sem uma jaqueta leve para a noite."
         cor_faixa = (16, 185, 129)  # verde
     else:
         faixa = "Clima Frio"
         roupa     = "Casaco, cachecol, luvas e roupas em camadas."
-        atividade = "Museus, cafes, restaurantes e passeios curtos."
-        evitar    = "Ficar exposto ao vento sem protecao adequada."
+        atividade = "Museus, cafés, restaurantes e passeios curtos."
+        evitar    = "Ficar exposto ao vento sem proteção adequada."
         cor_faixa = (59, 130, 246)  # azul
 
     pdf = FPDF() #Instancia um novo documento PDF na memória 
