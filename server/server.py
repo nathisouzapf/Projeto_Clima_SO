@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware #Permite que o Frontend web converse com o Backend sem ser bloqueado pelo navegador
 from fastapi.responses import FileResponse #Transmite o arquivo até o navegador do usuário quando clica em "Baixar PDF"
-import os #Utilizado para checar se o PDF existe no bloco rígido
+import os #Utilizado para checar se o PDF existe no disco rígido
 import redis #Permite enviar comandos para o banco de dados em memória Redis
 import httpx #Faz a requisição para buscar os dados na API
 import pika #Importa a biblioteca do sistema de filas
@@ -27,7 +27,7 @@ def enviar_para_fila(mensagem):
     conexao = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq')) #Abre a conexão com o servidor local do RabbitMQ
     canal = conexao.channel() #Cria um canal dentro da conexão para trafegar os comandos de envio de dados
     canal.queue_declare(queue='fila_pdf')
-    canal.basic_publish(exchange='', routing_key='fila_pdf', body=json.dumps(mensagem)) #Diz para qual fila a mensagrm deve ir
+    canal.basic_publish(exchange='', routing_key='fila_pdf', body=json.dumps(mensagem)) #Diz para qual fila a mensagem deve ir
     conexao.close() #Fecha a conexão com o RabbitMQ
 
 @app.get("/clima/{cidade}") #Criação da rota tipo GET - Captura a solicitação do usuário e manda para a função
