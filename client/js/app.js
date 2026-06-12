@@ -44,7 +44,7 @@ async function gerarGuia() {
                 
                 statusContainer.innerHTML = `
                     <div id="statusPdf" class="status-concluido">✅ Guia gerado com sucesso!</div>
-                    <a href="${API_URL}/download/${dadosStatus.arquivo}" class="btn-download" download>📥 Baixar Guia PDF</a>
+                    <a href="${API_URL}/download/${dadosStatus.arquivo}" class="btn-download" download> Baixar Guia PDF</a>
                 `;
             }
         }, 1500);
