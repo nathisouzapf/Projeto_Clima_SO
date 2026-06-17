@@ -1,45 +1,82 @@
+# O services é utilizado para indicar ao Docker Compose que tudo listado abaixo será um container na aplicação
 services:
 
+  # Redis é quem guarda os dados de clima e de status da aplicação na memória rápida 
   redis:
+    # Baixa uma imagem pronta do Docker Hub e especifica a versão 7 do Redis rodando sob o Alpine (bem enxuta) 
+    # Isso garante que o container inicialize rápido e utilize pouca memória RAM
     image: redis:7-alpine
+    # Fixa o nome do container como 'redis'
     container_name: redis
+    # Mapeia a porta que o Redis vai ouvir dentro do container e a porta que o Docker vai abrir no windows
+    # Porta padrão do Redis
     ports:
       - "6379:6379"
 
+  # RabbitMQ é o sistema de mensageria (filas)
+  # Quando ocorre uma requisição para gerar PDF, o server anota a solicitação e manda para a fila do RabbitMQ 
   rabbitmq:
+    # Vai baixar o sistema de mensageria RabbitMQ na versão 3, junto com o painel de controle visual
+    # Vai ser instalado na versão alpine, que é mais enxuta, reduzindo o tamanho da imagem 
     image: rabbitmq:3-management-alpine
+    # Fixa o nome do container como 'rabbitmq'
     container_name: rabbitmq
+    # Mapeia a porta por onde a biblioteca pika do Python vai enviar e coletar as mensagens da fila. ("5672:5672")
+    # "15672:15672" - é a porta de acesso ao painel de controle visual
     ports:
       - "5672:5672"
-      - "15672:15672"  # painel de administração: http://localhost:15672 (guest/guest)
+      - "15672:15672"  
 
+  # Server é o Backend, representa a API que recebe requisições dos usuários
+  # Ele gerencia o cache do Redis e despacha as tarefas de geração de PDF para a fila do RabbitMQ
   server:
+    # Comando para que a imagem da API seja construída
     build:
-      context: ./server
+      # Define a pasta que o Docker Compose deve ir para achar os arquivos do projeto
+      context: ./src
+      # Especifica qual arquivo deve ser executado para gerar a imagem da API
       dockerfile: Dockerfile
+    # Fixa o nome do container como server
     container_name: server
+    # Mapeia a porta onde o Python está rodando dentro do container e a porta que vai responder pelo navegador
     ports:
       - "8000:8000"
+    # Lê o arquivo env e transporta todas as variáveis de ambiente para dentro do container de forma segura
     env_file:
       - .env
+    # Informa ao Docker que tudo que estiver na pasta '/app/pdfs' deve ser jogado para dentro do pdfs no computador
+    # pdfs é um disco rígido criado pelo docker no computador físico
     volumes:
       - pdfs:/app/pdfs
+    # Define a ordem de inicialização dos containers
     depends_on:
       - redis
       - rabbitmq
 
+  # O Worker é o processador de segundo plano
+  # Responsável por executar a fila do RabbitMQ, gerar os PDFs
   worker:
+    # Comando para que a imagem do Worker seja construída
     build:
-      context: ./server
+      # Informa ao Docker em qual pasta estão os arquivos
+      context: ./src 
+      # Informa ao Docker que deve ser utilizado o Dockerfile.worker
       dockerfile: Dockerfile.worker
+      # Fixa o nome do container como worker
     container_name: worker
+    # Lê o arquivo env e transporta todas as variáveis de ambiente para dentro do container de forma segura
     env_file:
       - .env
+    # Informa ao Docker que tudo que estiver na pasta '/app/pdfs' deve ser jogado para dentro do pdfs no computador
+    # pdfs é um disco rígido criado pelo docker no computador físico
     volumes:
       - pdfs:/app/pdfs
+    # Define a ordem de inicialização dos containers
     depends_on:
       - redis
       - rabbitmq
 
+# Declara o volume 'pdfs' no HD da máquina física.
+# O Worker joga o PDF gerado aqui dentro, e a API consegue pegar o arquivo para entregar ao usuário.
 volumes:
   pdfs:

@@ -1,0 +1,28 @@
+# Utilizei o FROM para definir qual é a imagem base 'python:3.13', 
+# pois é a versão Python da minha máquina física
+# Utilizei a variante 'slim' (Debian sem pacotes extras ), 
+# pois é a mais indicada por reduzir o tamanho da imagem e o tempo de build
+FROM python:3.13-slim
+
+# Utilizei o WORKDIR para criar e definir o diretório '/app', onde todos os comandos seguintes serão executado.
+WORKDIR /app
+
+# Utilizei o COPY para copiar o 'requirements.txt' antes do código-fonte
+# O Docker trabalha com cache por camadas. 
+# Se tiver alterações no código fonte e o 'requirements.txt' não for alterado, o cache das dependências será reaproveitado
+COPY requirements.txt .
+
+# Utilizei o RUN para executar o pip e instalar as bibliotecas que estão no 'requirements.txt'
+# Utilizei o '--no-cache-dir' para que o pip não guarde os arquivos de download temporários dentro do container
+# Isso garante que na camada final tenha somente os pacotes necessários para execução
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Utilizei o COPY novamente para copiar o restante do projeto para dentro do container
+# Deixei ela para o final pois se eu alterar o código fonte, 
+# ele não vai precisar instalar novamente as dependências, que são mais pesadas
+COPY . .
+
+# Utilizei o CMD para definir o comando que será executado quando o container iniciar
+# "python" faz rodar o Python
+# "worker.py" o Python abre o arquivo e executa o código, que vai transformar o guia em PDF
+CMD ["python", "worker.py"]

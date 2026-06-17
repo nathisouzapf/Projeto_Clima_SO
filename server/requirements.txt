@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-redis
-httpx
-pika
-fpdf2
-pytz
